@@ -88,13 +88,9 @@
 <p><strong><a href="https://block.github.io/goose/docs/guides/isolated-development-environments">Get started with the full guide →</a></strong></p>
 <hr>
 <p><em>Questions? Join our <a href="https://github.com/block/goose" target="_blank" rel="noopener noreferrer">GitHub discussions</a> or <a href="https://discord.gg/block-opensource" target="_blank" rel="noopener noreferrer">Discord</a>. Learn more about Dagger at <a href="https://dagger.io/" target="_blank" rel="noopener noreferrer">dagger.io</a>.</em></p>
+<!-- -->
+<div style="width:100%;max-width:800px;margin:0 auto"><iframe width="560" height="315" src="https://www.youtube.com/embed/pGce9T4E5Yw?si=1D3Aoa6oiFgJ0E5w" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen=""></iframe></div>
 ]]></content:encoded>
-            <category>extensions</category>
-            <category>containers</category>
-            <category>development</category>
-            <category>isolation</category>
-            <category>mcp</category>
-            <category>dagger</category>
         </item>
         <item>
             <title><![CDATA[Why I Used Goose to Build a Chaotic Emotion Detection App]]></title>
