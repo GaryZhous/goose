@@ -122,6 +122,9 @@ enum SessionCommand {
         )]
         output: Option<PathBuf>,
     },
+    Resume {
+
+    },
 }
 
 #[derive(Subcommand, Debug)]
@@ -781,6 +784,81 @@ pub async fn cli() -> Result<()> {
 
                     crate::commands::session::handle_session_export(session_identifier, output)?;
                     Ok(())
+                }
+                Some(SessionCommand::Resume { }) => {
+                    // Resume the latest session (no identifier)
+                    let session_start = std::time::Instant::now();
+                    let session_type = "resumed";
+
+                    tracing::info!(
+                        counter.goose.session_starts = 1,
+                        session_type,
+                        interactive = true,
+                        "Session started (resume latest)"
+                    );
+
+                    let mut session: crate::Session = build_session(SessionBuilderConfig {
+                        identifier: None,
+                        resume: true,
+                        no_session: false,
+                        extensions: Vec::new(),
+                        remote_extensions: Vec::new(),
+                        streamable_http_extensions: Vec::new(),
+                        builtins: Vec::new(),
+                        extensions_override: None,
+                        additional_system_prompt: None,
+                        settings: None,
+                        provider: None,
+                        model: None,
+                        debug: false,
+                        max_tool_repetitions: None,
+                        max_turns: None,
+                        scheduled_job_id: None,
+                        interactive: true,
+                        quiet: false,
+                        sub_recipes: None,
+                        final_output_response: None,
+                        retry_config: None,
+                    }).await;
+
+                    // Optionally render previous messages if you want to mimic --history
+                    // session.render_message_history();
+
+                    let result = session.interactive(None).await;
+
+                    let session_duration = session_start.elapsed();
+                    let exit_type = if result.is_ok() { "normal" } else { "error" };
+
+                    let (total_tokens, message_count) = session
+                        .get_metadata()
+                        .map(|m| (m.total_tokens.unwrap_or(0), m.message_count))
+                        .unwrap_or((0, 0));
+
+                    tracing::info!(
+                        counter.goose.session_completions = 1,
+                        session_type,
+                        exit_type,
+                        duration_ms = session_duration.as_millis() as u64,
+                        total_tokens,
+                        message_count,
+                        "Session completed (resume latest)"
+                    );
+
+                    tracing::info!(
+                        counter.goose.session_duration_ms = session_duration.as_millis() as u64,
+                        session_type,
+                        "Session duration (resume latest)"
+                    );
+
+                    if total_tokens > 0 {
+                        tracing::info!(
+                            counter.goose.session_tokens = total_tokens,
+                            session_type,
+                            "Session tokens (resume latest)"
+                        );
+                    }
+
+                    return Ok(());
                 }
                 None => {
                     let session_start = std::time::Instant::now();
